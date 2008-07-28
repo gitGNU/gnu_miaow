@@ -286,6 +286,6 @@ class MiaowController:
         msg.destroy()
         
 if __name__ == "__main__":
-    glade_file = "/home/mospina/programacion/miaow-git/data/miaow-editor.glade"
+    glade_file = "../../data/miaow-editor.glade"
     MiaowController(glade_file)
     gtk.main()
