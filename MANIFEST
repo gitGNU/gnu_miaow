@@ -1,0 +1,15 @@
+COPYING
+README
+setup.py
+miaowandpurr/__init__.py
+miaowandpurr/vcs/__init__.py
+miaowandpurr/vcs/handler.py
+miaowandpurr/vcs/vcsstore.py
+miaowandpurr/vcs/vcshandlers/__init__.py
+miaowandpurr/vcs/vcshandlers/svnhandler.py
+miaowandpurr/kitten/__init__.py
+miaowandpurr/kitten/handler.py
+miaowandpurr/kitten/l10nkitstore.py
+miaowandpurr/kitten/models.py
+miaowandpurr/kitten/l10nkithandlers/__init__.py
+miaowandpurr/kitten/l10nkithandlers/publican.py

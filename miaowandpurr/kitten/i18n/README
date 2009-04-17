@@ -1,0 +1,30 @@
+whisker
+=======
+
+whisker is a localization kits store module.
+
+Usage
+-----
+
+from whisker.l10nkitstore import L10nKitStore
+
+store = L10nKitStore()
+handler = store.handler('publican', '~/project_path')
+for language in handler.languages:
+    kit = handler.get_kit(language)
+    print kit.format
+    for file_path in kit:
+        print file_path
+
+Description
+-----------
+
+whisker develops a factory method to instantiate a localization kit handler. To
+get the handler, it is necessary to instantiate the store and request a handler
+through the handler method. The handler method accept two arguments: the name of
+the handler (in the previous example is *publican*) and the directory path where
+the project resides. 
+
+The handler has the following methods:
+
+* get_kit(target_language)

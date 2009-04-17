@@ -1,0 +1,28 @@
+miaowandpurr
+============
+
+miaowandpurr is a CAT (Computer assisted translation) tool.
+
+components
+----------
+
+* purr - a localization project manager
+
+* miaow - a localization editor
+
+* hiss - a translation memory engine 
+
+* growl - a glossary manager
+
+modules
+-------
+
+* vcs - version Control system factory
+
+* kitten - a localization kit factory.
+
+model (data structure)
+----------------------
+
+* catus
+
