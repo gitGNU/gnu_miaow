@@ -29,6 +29,7 @@ except:
     print "GTK is not installed"
     sys.exit(1)
 
+from miaowandpurr.felis import widgets
 import view, model
 
 class MiaowController:
@@ -46,24 +47,24 @@ class MiaowController:
         gtk.main_quit()
 
     def open(self, obj):
-        filename = view.file_chooser('Open...', gtk.FILE_CHOOSER_ACTION_OPEN)
+        filename = widgets.file_chooser('Open...', gtk.FILE_CHOOSER_ACTION_OPEN)
         self.model.open(filename)
 
     def save(self, obj):
-        view.error_dialog("This feature has not been implemented yet") 
+        widgets.error_dialog("This feature has not been implemented yet") 
 
     def save_as(self, obj):
-        view.error_dialog("This feature has not been implemented yet") 
+        widgets.error_dialog("This feature has not been implemented yet") 
 
     def previous(self, obj):
-        view.error_dialog("This feature has not been implemented yet") 
+        widgets.error_dialog("This feature has not been implemented yet") 
 
     def next(self, obj):
-        view.error_dialog("This feature has not been implemented yet") 
+        widgets.error_dialog("This feature has not been implemented yet") 
 
     def about(self, obj):
         txt = "miaowandpurr is a CAT (Computer Assisted Translation) suite"
-        view.info_dialog(txt) 
+        widgets.info_dialog(txt) 
             
 if __name__ == "__main__":
     from miaowandpurr.glade import MIAOW_GLADE_FILE 
