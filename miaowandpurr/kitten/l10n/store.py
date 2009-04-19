@@ -40,12 +40,20 @@ class L10NStore(object):
         handler = self._handler_(file_format)
         return handler.read(filename, document)
 
+    def write(self, filename, document):
+        pass
+
+    def get_states(self, filename):
+        assert os.path.isfile(filename)
+        file_format = os.path.splitext(filename)[1]
+        handler = self._handler_(file_format)
+        return handler.entry_states
             
 if __name__ == '__main__':
     from miaowandpurr.catus.map import Document, CompositeIterator
     store = L10NStore()
     print store.handlers
-    d = store.read('/home/mospina/Documents/RedHat/Red_Hat_Enterprise_Linux/5.2/Global_File_System_2/es-ES/Getting_Started.po', Document()) 
+    d = store.read('a/home/mospina/Documents/RedHat/Red_Hat_Enterprise_Linux/5.2/Global_File_System_2/es-ES/Getting_Started.po', Document()) 
     iter = CompositeIterator(d)
     while iter.has_next():
         composite = iter.next()

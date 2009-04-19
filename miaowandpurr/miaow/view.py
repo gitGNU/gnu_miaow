@@ -16,6 +16,19 @@
 # along with miaowandpurr; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+try:
+    import pygtk
+    pygtk.require('2.0')
+except:
+    pass
+try:
+    import gtk
+    import gtk.glade
+    import pango
+except:
+    print "GTK is not installed"
+    sys.exit(1)
+
 class MiaowView:
 
     def __init__(self, controller, model, glade_file):
@@ -52,13 +65,32 @@ class MiaowView:
     def set_states(self):
         store = gtk.ListStore(str)
         store.append(['All states'])
-        for handler in self.model.data_handler.entry_states:
+        for handler in self.model.get_states():
             store.append([handler])
         states = self.window.get_widget("states_boxentry")
         states.set_model(store)
         states.set_text_column(0)
         states.set_active(0)
     
-    def update(self): pass
+    def update(self): 
+        transunit = self.model.current
+        source_view = self.window.get_widget('source_view')
+        source_buffer = source_view.get_buffer()
+        source_start = source_buffer.get_start_iter()
+        source_end = source_buffer.get_end_iter()
+        # Clean previous entry
+        source_buffer.delete(source_start, source_end)
+        # Display new entry
+        source_buffer.insert(source_end, transunit.source.content)
+        # For target:
+        target_view = self.window.get_widget('target_view')
+        target_buffer = target_view.get_buffer()
+        target_start = target_buffer.get_start_iter()
+        target_end = target_buffer.get_end_iter()
+        # Clean previous entry
+        target_buffer.delete(target_start, target_end)
+        # Display new entry if it exist.
+        if transunit.target:
+            target_buffer.insert(target_end, transunit.target.content)    
         
 if __name__ == "__main__": pass

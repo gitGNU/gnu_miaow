@@ -49,6 +49,7 @@ class MiaowController:
     def open(self, obj):
         filename = widgets.file_chooser('Open...', gtk.FILE_CHOOSER_ACTION_OPEN)
         self.model.open(filename)
+        self.next(obj)
 
     def save(self, obj):
         widgets.error_dialog("This feature has not been implemented yet") 
@@ -57,17 +58,17 @@ class MiaowController:
         widgets.error_dialog("This feature has not been implemented yet") 
 
     def previous(self, obj):
-        widgets.error_dialog("This feature has not been implemented yet") 
+        self.model.previous()
 
     def next(self, obj):
-        widgets.error_dialog("This feature has not been implemented yet") 
+        self.model.next()
 
     def about(self, obj):
         txt = "miaowandpurr is a CAT (Computer Assisted Translation) suite"
         widgets.info_dialog(txt) 
             
 if __name__ == "__main__":
-    from miaowandpurr.glade import MIAOW_GLADE_FILE 
+    from miaowandpurr.miaow.glade import MIAOW_GLADE_FILE 
     # FIX ME!
     #file_path = "/NotBackedUp/mospina/svn/Red_Hat_Enterprise_Linux/5.2/Virtualization_Guide/es-ES/Preface.po"
     glade_file = MIAOW_GLADE_FILE

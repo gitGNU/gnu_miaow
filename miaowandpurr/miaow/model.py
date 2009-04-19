@@ -17,23 +17,16 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os.path
-from miaowandpurr.catus.map import Document
+from miaowandpurr.catus.map import Document, CompositeIterator
 from miaowandpurr.kitten.l10n.store import L10NStore 
 
-# [TODO]
-# * the l10n_handler should be only a filter
-# * the l10n_handler.read should return a Document():
-#       def read(filename, document=Document())
-#           map = document
-#           ....
-#           return map
+# [TO DO]
 # * The l10n_handler.write should return True on success
 #       def write(filename, document)
 #           ....
 #           return True
-# * The MiaowModel should have the following attributes: 
-#       * filename
-#       * l10n_store
+# * The target content is not showing.!
+# * Fix previous() and next() to avoid the methods to return a None object
 # * (OPTIONAL) The MiaowModel could have an attribute page that store the data
 #   for each document that is loaded (when miaow implement a nootbook widget).
 # Go to the first translation unit (here or in the controller?)
@@ -44,15 +37,53 @@ class MiaowModel:
     
     def __init__(self):
         self.filename = ''
-        self.data_store = L10NStore() 
-        self.data_handler = None
+        self.l10n_store = L10NStore() 
+        self.document = Document()
+        self.iter = None
+        self.current = None
         
     def open(self, filename):
         self.filename = filename
-        file_format = os.path.splitext(self.filename)[1]
-        self.data_handler = self.data_store.handler(file_format, Document()) 
-
+        self.document = self.l10n_store.read(filename, self.document) 
+        self.iter = CompositeIterator(self.document)
         self.notify_states_change()
+
+    def save(self, filename):
+        pass
+    
+    def get_states(self):
+        return self.l10n_store.get_states(self.filename)
+
+    def previous(self):
+        print self.current.source.content
+        while self.iter.has_previous():
+            composite = self.iter.previous()
+            if composite.name == 'TransUnit':
+                if composite.segmented:
+                    continue
+                else:
+                    break
+            if composite.name == 'Segment':
+                break
+        if composite.name not in ['TransUnit', 'Segment']:
+            self.next()
+            return
+        self.current = composite
+        self.notify()
+
+    def next(self):
+        composite = None
+        while self.iter.has_next():
+            composite = self.iter.next()
+            if composite.name == 'TransUnit':
+                if composite.segmented:
+                    continue
+                else:
+                    break
+            if composite.name == 'Segment':
+                break
+        self.current = composite
+        self.notify()
 
     # Observer Pattern:    
     def register(self, observer):
