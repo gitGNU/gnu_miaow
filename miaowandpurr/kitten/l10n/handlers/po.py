@@ -48,3 +48,15 @@ class PoHandler(HandlerBase):
                                   msgstr=unit.target.content)
         po.append(entry)
         po.save_as_pofile(filename)
+
+if __name__ == '__main__':
+    from miaowandpurr.catus.map import Document, CompositeIterator
+    map_h = PoHandler(Document())
+    map_h.read('/home/mospina/Documents/RedHat/Red_Hat_Enterprise_Linux/5.2/Global_File_System_2/es-ES/Getting_Started.po') 
+
+    iter = CompositeIterator(map_h.data)
+    while iter.has_next():
+        composite = iter.next()
+        if composite.name == 'Source':
+            print composite.content
+        #print composite.name

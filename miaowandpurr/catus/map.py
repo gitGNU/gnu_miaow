@@ -171,9 +171,9 @@ class CompositeIterator(Iterator):
 
 class Component(list):
     
-    def __init__(self, name="", attributes={}, content=""):
+    def __init__(self, attributes={}, content=""):
         list.__init__(self)
-        self.name = name
+        self.name = self.__class__.__name__
         self.attributes = attributes
         self.content = content
                 
@@ -189,12 +189,12 @@ class Component(list):
 class Document(Component):
     
     def __init__(self, attributes={}, content=""):
-        Component.__init__(self, "document", attributes, content)
+        Component.__init__(self, attributes, content)
              
 class File(Component):
         
     def __init__(self, attributes={}, content=""):
-        Component.__init__(self, "file", attributes, content)
+        Component.__init__(self, attributes, content)
         self.head = Head()
         self.body = Body()
         
@@ -207,17 +207,17 @@ class File(Component):
 class Head(Component):
     
     def __init__(self, attributes={}, content=""):
-        Component.__init__(self, "head", attributes, content)     
+        Component.__init__(self, attributes, content)     
 
 class Body(Component):
     
     def __init__(self, attributes={}, content=""):
-        Component.__init__(self, "body", attributes, content)     
+        Component.__init__(self, attributes, content)     
 
 class TransUnit(Component):
     
     def __init__(self, attributes={}, content=""):
-        Component.__init__(self, "trans-unit", attributes, content)
+        Component.__init__(self, attributes, content)
         self.source = Source()
         self.target = Target()
         
@@ -232,19 +232,19 @@ class TransUnit(Component):
 class Source(Component):
     
     def __init__(self, attributes={}, content=""):
-        Component.__init__(self, "source", attributes, content)     
+        Component.__init__(self, attributes, content)     
 
 class Target(Component):
     
     def __init__(self, attributes={}, content=""):
-        Component.__init__(self, "target", attributes, content)
+        Component.__init__(self, attributes, content)
         
     def append(self, element): pass
         
 class AltTrans(Component):
     
     def __init__(self, attributes={}, content=""):
-        Component.__init__(self, "alt-trans", attributes, content)
+        Component.__init__(self, attributes, content)
         self.source = Source()
         self.target = Target()
         
@@ -258,7 +258,7 @@ class Segment(TransUnit):
     
     def __init__(self, attributes={}, content=""):
         TransUnit.__init__(self, attributes, content)
-        self.name = "segment"
+        self.name = self.__class__.__name__
         
 if __name__ == '__main__':
     document = Document()

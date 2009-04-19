@@ -20,6 +20,8 @@ import os.path
 from miaowandpurr.catus.data import Document
 from miaowandpurr.catus.datastore import DataStore 
 
+# [NOTE]
+# MiaowModel doesn't need to inherit Document.
 class MiaowModel(Document):
     
     observers = []
