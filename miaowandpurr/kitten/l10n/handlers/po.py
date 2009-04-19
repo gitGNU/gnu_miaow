@@ -26,9 +26,9 @@ class PoHandler(HandlerBase):
     file_format = '.po'
     entry_states = ['translated', 'fuzzy', 'untranslated']
 
-    def read(self, file_path):
+    def read(self, filename, document):
         """Read file_path to self.data."""
-        po = polib.pofile(file_path)
+        po = polib.pofile(filename)
         miaow_file = File()
         miaow_file.head.attributes = po.metadata
         for entry in po:
@@ -36,12 +36,13 @@ class PoHandler(HandlerBase):
             tu.source.content = entry.msgid
             tu.target.content = entry.msgstr
             miaow_file.body.append(tu)
-        self.data.append(miaow_file)
+        document.append(miaow_file)
+        return document
 
-    def write(self, file_path):
+    def write(self, file_path, document):
         """Write self.data to file_path as Po."""
         po = polib.POFile()
-        miaow_file = self.data[0]
+        miaow_file = document[0]
         po.metadata = miaow_file.head.attributes
         for unit in miaow_file.body:
             entry = polib.POEntry(msgid=unit.source.content,
@@ -51,12 +52,12 @@ class PoHandler(HandlerBase):
 
 if __name__ == '__main__':
     from miaowandpurr.catus.map import Document, CompositeIterator
-    map_h = PoHandler(Document())
-    map_h.read('/home/mospina/Documents/RedHat/Red_Hat_Enterprise_Linux/5.2/Global_File_System_2/es-ES/Getting_Started.po') 
-
-    iter = CompositeIterator(map_h.data)
+    map_h = PoHandler()
+    d = map_h.read('/home/mospina/Documents/RedHat/Red_Hat_Enterprise_Linux/5.2/Global_File_System_2/es-ES/Getting_Started.po',
+    Document()) 
+    iter = CompositeIterator(d)
     while iter.has_next():
         composite = iter.next()
         if composite.name == 'Source':
             print composite.content
-        #print composite.name
+        print composite.name

@@ -26,5 +26,10 @@ model (data structure)
 
 * catus
 
-# Scripts:
+REMEMBER
+========
+
 find -name '*.pyc' |xargs rm
+
+git clone ssh://mospina@git.sv.gnu.org/srv/git/miaow.git
+git push --all mospina@git.sv.gnu.org:/srv/git/miaow.git

@@ -17,29 +17,43 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os.path
-from miaowandpurr.catus.data import Document
-from miaowandpurr.catus.datastore import DataStore 
+from miaowandpurr.catus.map import Document
+from miaowandpurr.kitten.l10n.store import L10NStore 
 
-# [NOTE]
-# MiaowModel doesn't need to inherit Document.
-class MiaowModel(Document):
+# [TODO]
+# * the l10n_handler should be only a filter
+# * the l10n_handler.read should return a Document():
+#       def read(filename, document=Document())
+#           map = document
+#           ....
+#           return map
+# * The l10n_handler.write should return True on success
+#       def write(filename, document)
+#           ....
+#           return True
+# * The MiaowModel should have the following attributes: 
+#       * filename
+#       * l10n_store
+# * (OPTIONAL) The MiaowModel could have an attribute page that store the data
+#   for each document that is loaded (when miaow implement a nootbook widget).
+# Go to the first translation unit (here or in the controller?)
+
+class MiaowModel:
     
     observers = []
     
     def __init__(self):
-        Document.__init__(self)
         self.filename = ''
-        self.data_store = DataStore() 
+        self.data_store = L10NStore() 
         self.data_handler = None
         
     def open(self, filename):
         self.filename = filename
         file_format = os.path.splitext(self.filename)[1]
-        self.data_handler = self.data_store.handler(file_format, self) 
+        self.data_handler = self.data_store.handler(file_format, Document()) 
+
         self.notify_states_change()
-        # FIX ME
-        # Go to the first translation unit (here or in the controller?)
-        
+
     # Observer Pattern:    
     def register(self, observer):
         self.observers.append(observer)

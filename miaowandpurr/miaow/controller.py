@@ -30,7 +30,7 @@ except:
     sys.exit(1)
 
 from miaowandpurr.felis import widgets
-import view, model
+from miaowandpurr.miaow import view, model
 
 class MiaowController:
 

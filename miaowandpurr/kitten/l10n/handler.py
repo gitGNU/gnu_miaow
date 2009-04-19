@@ -25,8 +25,8 @@ class HandlerBase(object):
     file_format = ''
     entry_states = ''
 
-    def __init__(self, data):
-        self.data = data
+    #def __init__(self, data):
+    #    self.data = data
 
-    def read(self, filename): pass
-    def write(self, filename): pass
+    def read(self, filename, document): pass
+    def write(self, filename, document): pass
