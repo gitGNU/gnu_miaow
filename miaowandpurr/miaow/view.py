@@ -71,9 +71,17 @@ class MiaowView:
         states.set_model(store)
         states.set_text_column(0)
         states.set_active(0)
+
+    def get_state(self):
+        states = self.window.get_widget("states_boxentry")
+        model = states.get_model()
+        index = states.get_active()
+        state = model[index][0]
+        if state == 'All states': state = ''
+        return state
     
     def update(self): 
-        transunit = self.model.current
+        transunit = self.model.data[self.model.cursor]
         source_view = self.window.get_widget('source_view')
         source_buffer = source_view.get_buffer()
         source_start = source_buffer.get_start_iter()
@@ -81,7 +89,7 @@ class MiaowView:
         # Clean previous entry
         source_buffer.delete(source_start, source_end)
         # Display new entry
-        source_buffer.insert(source_end, transunit.source.content)
+        source_buffer.insert(source_end, transunit.source)
         # For target:
         target_view = self.window.get_widget('target_view')
         target_buffer = target_view.get_buffer()
@@ -91,6 +99,6 @@ class MiaowView:
         target_buffer.delete(target_start, target_end)
         # Display new entry if it exist.
         if transunit.target:
-            target_buffer.insert(target_end, transunit.target.content)    
+            target_buffer.insert(target_end, transunit.target)    
         
 if __name__ == "__main__": pass

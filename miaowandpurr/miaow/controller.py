@@ -49,7 +49,6 @@ class MiaowController:
     def open(self, obj):
         filename = widgets.file_chooser('Open...', gtk.FILE_CHOOSER_ACTION_OPEN)
         self.model.open(filename)
-        self.next(obj)
 
     def save(self, obj):
         widgets.error_dialog("This feature has not been implemented yet") 
@@ -58,10 +57,12 @@ class MiaowController:
         widgets.error_dialog("This feature has not been implemented yet") 
 
     def previous(self, obj):
-        self.model.previous()
+        state = self.view.get_state()
+        self.model.previous(state)
 
     def next(self, obj):
-        self.model.next()
+        state = self.view.get_state()
+        self.model.next(state)
 
     def about(self, obj):
         txt = "miaowandpurr is a CAT (Computer Assisted Translation) suite"

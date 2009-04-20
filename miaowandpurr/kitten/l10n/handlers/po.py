@@ -35,6 +35,12 @@ class PoHandler(HandlerBase):
             tu = TransUnit()
             tu.source.content = entry.msgid
             tu.target.content = entry.msgstr
+            if tu.target.content:
+                tu.state = 'translated'
+            else:
+                tu.state = 'untranslated'        
+            if 'fuzzy' in entry.flags:
+                tu.state = 'fuzzy'
             miaow_file.body.append(tu)
         document.append(miaow_file)
         return document

@@ -80,7 +80,10 @@ class Iterator(object):
     def __init__(self, items):
         self.items = items
         self.position = 0
-        
+    
+    def __str__(self):
+        return '%s[%d]' % (self.items.name, self.position)
+
     def has_previous(self):
         """Return True if there are previous items in the iterator."""
         if self.position <= 0:
@@ -107,7 +110,9 @@ class Iterator(object):
         item = self.items[self.position]
         self.position += 1
         return item
-    
+
+# [NOTE]
+# Previous doesn't really work. FIX IT!
 class CompositeIterator(Iterator):
 
     """
@@ -176,7 +181,12 @@ class Component(list):
         self.name = self.__class__.__name__
         self.attributes = attributes
         self.content = content
-                
+    
+    def _reset_(self):
+        n = len(self)
+        for i in range(n):
+            self.pop()
+
     def has_iterator(self):
         if not len(self):
             return False
@@ -202,7 +212,10 @@ class File(Component):
         return True
             
     def create_iterator(self):
-        return Iterator([self.head, self.body])
+        self._reset_()
+        iter = [self.head, self.body]
+        self.extend(iter)
+        return Iterator(self)
 
 class Head(Component):
     
@@ -221,27 +234,21 @@ class TransUnit(Component):
         self.source = Source()
         self.target = Target()
         self.alt_trans = AltTrans()
-        self.segmented = False
+        self.state = ''
         
     def has_iterator(self):
         return True
     
     def create_iterator(self):
+        self._reset_()
         iter = [self.source, self.target, self.alt_trans]
-        iter.extend(self)
-        return Iterator(iter)
+        self.extend(iter)
+        return Iterator(self)
 
 class Source(Component):
     
     def __init__(self, attributes={}, content=""):
         Component.__init__(self, attributes, content)     
-        #self.segments = Segments()
-
-    #def has_iterator(self):
-    #    return True
-    
-    #def create_iterator(self):
-    #    return Iterator(self.segments)
 
 class Target(Component):
     
@@ -255,54 +262,21 @@ class AltTrans(Component):
     def __init__(self, attributes={}, content=""):
         Component.__init__(self, attributes, content)
         
-class Alternative(Component):
+class Alternative(TransUnit):
     
     def __init__(self, attributes={}, content=""):
-        Component.__init__(self, attributes, content)
-        self.source = Source()
-        self.target = Target()
-
-    def has_iterator(self):
-        return True
+        TransUnit.__init__(self, attributes, content)
     
     def create_iterator(self):
-        return Iterator([self.source, self.target])
+        self._reset_()
+        iter = [self.source, self.target]
+        self.extend(iter)
+        return Iterator(self)
 
-# [FIX ME]
-class Segments(Component):
+class Segment(TransUnit):
     
     def __init__(self, attributes={}, content=""):
-        Component.__init__(self, attributes, content)
-        self.segment = Segment()
-        
-    def has_iterator(self):
-        return True
-    
-    def create_iterator(self):
-        return Iterator([x for x in self.segment])
-
-class Segment(Component):
-
-    def __init__(self, attributes={}, content=""):
-        Component.__init__(self, attributes, content)
-        self.source = SegmentSource()
-        self.target = Target()
-        self.alt_trans = AltTrans()
-     
-    def has_iterator(self):
-        return True
-    
-    def create_iterator(self):
-        iter = [self.source, self.target, self.alt_trans]
-        iter.extend(self)
-        return Iterator(iter)
-
-class SegmentSource(Component):
-    
-    def __init__(self, attributes={}, content=""):
-        Component.__init__(self, attributes, content)
-
-    def append(self, element): pass
+        TransUnit.__init__(self, attributes, content)
 
 if __name__ == '__main__':
     document = Document()

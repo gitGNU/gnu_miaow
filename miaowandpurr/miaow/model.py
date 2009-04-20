@@ -31,6 +31,21 @@ from miaowandpurr.kitten.l10n.store import L10NStore
 #   for each document that is loaded (when miaow implement a nootbook widget).
 # Go to the first translation unit (here or in the controller?)
 
+(
+    TRANSUNIT,
+    SOURCE,
+    TARGET,
+    STATE
+) = range(4)
+
+class Data:
+
+    def __init__(self, node, source, target, state):
+        self.node = node
+        self.source = source
+        self.target = target
+        self.state = state
+
 class MiaowModel:
     
     observers = []
@@ -39,14 +54,26 @@ class MiaowModel:
         self.filename = ''
         self.l10n_store = L10NStore() 
         self.document = Document()
-        self.iter = None
-        self.current = None
-        
+        self.data = []
+        self.cursor = 0
+    
+    def _load_data_(self, iter):
+        while iter.has_next():
+            composite = iter.next()
+            if composite.name == 'TransUnit':
+                tu = Data(composite, 
+                          composite.source.content, 
+                          composite.target.content,
+                          composite.state)
+                self.data.append(tu)
+ 
     def open(self, filename):
         self.filename = filename
         self.document = self.l10n_store.read(filename, self.document) 
-        self.iter = CompositeIterator(self.document)
+        iter = CompositeIterator(self.document)
+        self._load_data_(iter)
         self.notify_states_change()
+        self.notify()
 
     def save(self, filename):
         pass
@@ -54,35 +81,22 @@ class MiaowModel:
     def get_states(self):
         return self.l10n_store.get_states(self.filename)
 
-    def previous(self):
-        print self.current.source.content
-        while self.iter.has_previous():
-            composite = self.iter.previous()
-            if composite.name == 'TransUnit':
-                if composite.segmented:
-                    continue
-                else:
-                    break
-            if composite.name == 'Segment':
-                break
-        if composite.name not in ['TransUnit', 'Segment']:
-            self.next()
-            return
-        self.current = composite
+    def previous(self, state): 
+        cursor = self.cursor
+        if self.cursor > 0:
+            self.cursor -= 1
+        if state:
+            if self.data[self.cursor].state != state:
+                self.next(state)
         self.notify()
 
-    def next(self):
-        composite = None
-        while self.iter.has_next():
-            composite = self.iter.next()
-            if composite.name == 'TransUnit':
-                if composite.segmented:
-                    continue
-                else:
-                    break
-            if composite.name == 'Segment':
-                break
-        self.current = composite
+    def next(self, state):
+        cursor = self.cursor
+        if self.cursor < (len(self.data) - 1):
+            self.cursor += 1
+        if state:
+            if self.data[self.cursor].state != state:
+                self.next(state)
         self.notify()
 
     # Observer Pattern:    
