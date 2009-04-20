@@ -77,8 +77,10 @@ class MiaowView:
         model = states.get_model()
         index = states.get_active()
         state = model[index][0]
-        if state == 'All states': state = ''
-        return state
+        if state == 'All states':
+            return self.model.get_states()
+        else:
+            return [state]
     
     def update(self): 
         transunit = self.model.data[self.model.cursor]

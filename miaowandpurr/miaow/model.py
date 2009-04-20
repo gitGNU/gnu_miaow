@@ -25,11 +25,8 @@ from miaowandpurr.kitten.l10n.store import L10NStore
 #       def write(filename, document)
 #           ....
 #           return True
-# * The target content is not showing.!
-# * Fix previous() and next() to avoid the methods to return a None object
 # * (OPTIONAL) The MiaowModel could have an attribute page that store the data
 #   for each document that is loaded (when miaow implement a nootbook widget).
-# Go to the first translation unit (here or in the controller?)
 
 (
     TRANSUNIT,
@@ -83,21 +80,21 @@ class MiaowModel:
 
     def previous(self, state): 
         cursor = self.cursor
-        if self.cursor > 0:
-            self.cursor -= 1
-        if state:
-            if self.data[self.cursor].state != state:
-                self.next(state)
-        self.notify()
+        while cursor > 0:
+            cursor -= 1
+            if self.data[cursor].state in state:
+                self.cursor = cursor
+                self.notify()
+                return
 
     def next(self, state):
         cursor = self.cursor
-        if self.cursor < (len(self.data) - 1):
-            self.cursor += 1
-        if state:
-            if self.data[self.cursor].state != state:
-                self.next(state)
-        self.notify()
+        while cursor < (len(self.data) - 1):
+            cursor += 1
+            if self.data[cursor].state in state:
+                self.cursor = cursor
+                self.notify()
+                return
 
     # Observer Pattern:    
     def register(self, observer):
