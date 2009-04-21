@@ -41,7 +41,20 @@ def error_dialog(txt):
     
 def info_dialog(txt): 
     dialog(gtk.MESSAGE_INFO, txt)
-    
+
+def request_dialog(title, txt):
+    msg_label = gtk.Label(txt)
+    msg = gtk.Dialog(title, None, gtk.DIALOG_MODAL,
+                     (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, 
+                      gtk.STOCK_OK, gtk.RESPONSE_OK))
+    msg.resize(350, 250)
+    msg.vbox.pack_start(msg_label)
+    msg.show_all()
+    result = msg.run()
+    if result == gtk.RESPONSE_OK:
+        return True
+    msg.destroy()
+ 
 def file_chooser(txt, action):
     filename = ''
     chooser = gtk.FileChooserDialog(txt, None, action,

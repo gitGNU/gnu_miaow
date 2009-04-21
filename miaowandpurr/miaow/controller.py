@@ -41,7 +41,31 @@ class MiaowController:
         if file_path:
             self.model.open(file_path)        
 
+    def _update_model_(self):
+        transunit = self.model.data[self.model.cursor]
+        target_view = self.view.window.get_widget('target_view')
+        target_buffer = target_view.get_buffer()
+        # [TODO]
+        # Check if the entry has been modified.
+        #   modified = target_buffer.get_modified()
+        # We need to set set_modified(False) when the TextView go to the next
+        # entry.
+        #.
+        target_start = target_buffer.get_start_iter()
+        target_end = target_buffer.get_end_iter()
+        target_text = target_buffer.get_text(target_start, target_end)
+        transunit.target = target_text
+        # [TODO]
+        # There are no way to set the state of the entry.
+        # transunit.state = ?
+        #.
+        self.model.update_entry(transunit)
+
     def quit(self, obj):
+        if self.model.modified:
+            txt = 'The current file has not been saved.\rWould you like to save it?'
+            if widgets.request_dialog('Save File?', txt):
+                self.save(obj)
         window = obj.get_toplevel()
         window.destroy()
         gtk.main_quit()
@@ -57,10 +81,12 @@ class MiaowController:
         widgets.error_dialog("This feature has not been implemented yet") 
 
     def previous(self, obj):
+        self._update_model_()
         state = self.view.get_state()
         self.model.previous(state)
 
     def next(self, obj):
+        self._update_model_()
         state = self.view.get_state()
         self.model.next(state)
 

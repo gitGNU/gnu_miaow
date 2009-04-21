@@ -1,1 +1,3 @@
-1239945002:17-04-2009:Handler() in vcs and kitten is the same. Put it in core:NEW
+1239945002:17-04-2009:Handler() in vcs and kitten is the same. Put it in core:CLOSE
+1240275056:21-04-2009:Each entry has to be saved in model.data() when is modified in the view.:CLOSE
+1240295947:21-04-2009:Implement miaow.save():NEW

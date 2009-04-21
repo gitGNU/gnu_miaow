@@ -53,6 +53,7 @@ class MiaowModel:
         self.document = Document()
         self.data = []
         self.cursor = 0
+        self.modified = False
     
     def _load_data_(self, iter):
         while iter.has_next():
@@ -77,6 +78,11 @@ class MiaowModel:
     
     def get_states(self):
         return self.l10n_store.get_states(self.filename)
+    
+    def update_entry(self, data):
+        self.data[self.cursor] = data
+        self.modified = True
+        self.notify()
 
     def previous(self, state): 
         cursor = self.cursor
