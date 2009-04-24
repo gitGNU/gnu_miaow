@@ -45,7 +45,7 @@ class PoHandler(HandlerBase):
         document.append(miaow_file)
         return document
 
-    def write(self, file_path, document):
+    def write(self, filename, document):
         """Write self.data to file_path as Po."""
         po = polib.POFile()
         miaow_file = document[0]
@@ -53,7 +53,7 @@ class PoHandler(HandlerBase):
         for unit in miaow_file.body:
             entry = polib.POEntry(msgid=unit.source.content,
                                   msgstr=unit.target.content)
-        po.append(entry)
+            po.append(entry)
         po.save_as_pofile(filename)
 
 if __name__ == '__main__':

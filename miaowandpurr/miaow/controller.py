@@ -16,6 +16,9 @@
 # along with miaowandpurr; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
     
+# [NOTE]
+# I don't want to have the controller making any call to gtk methods so we can
+# implement an ncurses view if necessary.
 try:
     import pygtk
     pygtk.require('2.0')
@@ -28,6 +31,7 @@ try:
 except:
     print "GTK is not installed"
     sys.exit(1)
+#.
 
 from miaowandpurr.felis import widgets
 from miaowandpurr.miaow import view, model
@@ -48,8 +52,11 @@ class MiaowController:
         # [TODO]
         # Check if the entry has been modified.
         #   modified = target_buffer.get_modified()
-        # We need to set set_modified(False) when the TextView go to the next
+        # 1. We need to set set_modified(False) when the TextView go to the next
         # entry.
+        # 2. As we are updating the model everytime we move up/down the entry
+        # list, the exit() method always warn the user for a unsave file (even
+        # when the file has been saved). Fix.
         #.
         target_start = target_buffer.get_start_iter()
         target_end = target_buffer.get_end_iter()
@@ -62,6 +69,8 @@ class MiaowController:
         self.model.update_entry(transunit)
 
     def quit(self, obj):
+        # [TODO]
+        # The main window is closing before the dialog. FIX IT
         if self.model.modified:
             txt = 'The current file has not been saved.\rWould you like to save it?'
             if widgets.request_dialog('Save File?', txt):
@@ -69,13 +78,15 @@ class MiaowController:
         window = obj.get_toplevel()
         window.destroy()
         gtk.main_quit()
+        # .
 
     def open(self, obj):
         filename = widgets.file_chooser('Open...', gtk.FILE_CHOOSER_ACTION_OPEN)
         self.model.open(filename)
 
     def save(self, obj):
-        widgets.error_dialog("This feature has not been implemented yet") 
+        self._update_model_()
+        self.model.save(self.model.filename)
 
     def save_as(self, obj):
         widgets.error_dialog("This feature has not been implemented yet") 

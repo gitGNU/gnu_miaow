@@ -74,7 +74,13 @@ class MiaowModel:
         self.notify()
 
     def save(self, filename):
-        pass
+        for i in self.data:
+            i.node.target.content = i.target
+            i.node.state = i.state
+        self.filename = filename
+        self.l10n_store.write(filename, self.document)
+        self.modified = False
+        self.notify()
     
     def get_states(self):
         return self.l10n_store.get_states(self.filename)
